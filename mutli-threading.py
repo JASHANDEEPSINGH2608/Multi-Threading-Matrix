@@ -6,7 +6,7 @@ import psutil
 import tracemalloc
 import threading
 
-# Define the matrix multiplication function outside of main
+
 def multiply_matrices(matrix_constant_tuple):
     matrix, constant_matrix = matrix_constant_tuple
     return np.dot(matrix, constant_matrix)
@@ -15,17 +15,17 @@ def execute_multiprocessing(num_threads, matrices, constant_matrix, cpu_usage_lo
     start_time = time.time()
     print(f"Running with {num_threads} processes...")
 
-    # Prepare the data as tuples of (matrix, constant_matrix) for each multiplication
+   
     data = [(matrix, constant_matrix) for matrix in matrices]
     
-    # Start CPU monitoring in a separate thread
+  
     cpu_monitoring_thread = threading.Thread(target=monitor_cpu_usage, args=(cpu_usage_log,))
     cpu_monitoring_thread.start()
     
     with Pool(processes=num_threads) as pool:
         results = pool.map(multiply_matrices, data, chunksize=1)
 
-    # Stop CPU monitoring after computation
+    
     global monitoring
     monitoring = False
     cpu_monitoring_thread.join()
@@ -34,7 +34,7 @@ def execute_multiprocessing(num_threads, matrices, constant_matrix, cpu_usage_lo
     print(f"Execution completed with {num_threads} processes.")
     return (end_time - start_time) / 60  # Return time in minutes
 
-# Function to monitor CPU usage
+
 monitoring = True
 def monitor_cpu_usage(cpu_usage_log, interval=0.5):
     """Records CPU usage every `interval` seconds."""
@@ -43,7 +43,7 @@ def monitor_cpu_usage(cpu_usage_log, interval=0.5):
 
 def plot_cpu_usage(cpu_usage_log):
     """Plots CPU usage per core over time."""
-    # Transpose the list of lists to get usage per core over time
+   
     cpu_usage_log = list(zip(*cpu_usage_log))
     time_points = list(range(len(cpu_usage_log[0])))  # X-axis (time points)
 
@@ -59,11 +59,10 @@ def plot_cpu_usage(cpu_usage_log):
     plt.show()
 
 def main():
-    # Adjusted parameters to test in a manageable way
-    num_matrices = 5    # Start with 5 matrices for testing
-    matrix_size = 10    # Smaller matrix size for testing
-
-    # Generate smaller matrices
+   
+    num_matrices = 5    
+    matrix_size = 10   
+    
     print("Generating matrices...")
     matrices = [np.random.rand(matrix_size, matrix_size) for _ in range(num_matrices)]
     constant_matrix = np.random.rand(matrix_size, matrix_size)
